@@ -1,12 +1,10 @@
 #!/bin/bash
 # Submit an app creation request to MiniDev API
-# Usage: minidev-create.sh "<prompt>" [appType] [targetChain] [name]
+# Usage: minidev-create.sh "<prompt>" [name]
 #
 # Arguments:
-#   prompt      - Description of the app to create (required)
-#   appType     - "farcaster" or "web3" (default: farcaster)
-#   targetChain - "base" or "monad" (default: base)
-#   name        - Optional name for the project
+#   prompt - Description of the app to create (required)
+#   name   - Optional name for the project
 #
 # Returns JSON with jobId and projectId for polling
 
@@ -44,29 +42,23 @@ fi
 
 # Parse arguments
 PROMPT="${1:-}"
-APP_TYPE="${2:-farcaster}"
-TARGET_CHAIN="${3:-base}"
-NAME="${4:-}"
+NAME="${2:-}"
 
 if [ -z "$PROMPT" ]; then
-  echo '{"error": "Usage: minidev-create.sh \"<prompt>\" [appType] [targetChain] [name]"}' >&2
+  echo '{"error": "Usage: minidev-create.sh \"<prompt>\" [name]"}' >&2
   exit 1
 fi
 
-# Build request body
+# Build request body (appType is always "web3" for web apps)
 if [ -n "$NAME" ]; then
   REQUEST_BODY=$(jq -nc \
     --arg prompt "$PROMPT" \
-    --arg appType "$APP_TYPE" \
-    --arg targetChain "$TARGET_CHAIN" \
     --arg name "$NAME" \
-    '{prompt: $prompt, appType: $appType, targetChain: $targetChain, name: $name}')
+    '{prompt: $prompt, appType: "web3", name: $name}')
 else
   REQUEST_BODY=$(jq -nc \
     --arg prompt "$PROMPT" \
-    --arg appType "$APP_TYPE" \
-    --arg targetChain "$TARGET_CHAIN" \
-    '{prompt: $prompt, appType: $appType, targetChain: $targetChain}')
+    '{prompt: $prompt, appType: "web3"}')
 fi
 
 # Submit request

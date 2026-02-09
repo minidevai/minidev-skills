@@ -41,8 +41,7 @@ MiniDev uses an asynchronous job-based API for app creation:
 ```json
 {
   "prompt": "Create a simple counter app with increment and decrement buttons",
-  "appType": "farcaster",
-  "targetChain": "base",
+  "appType": "web3",
   "name": "My Counter App"
 }
 ```
@@ -51,8 +50,7 @@ MiniDev uses an asynchronous job-based API for app creation:
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | prompt | string | Yes | - | Description of the app (10-10000 chars) |
-| appType | string | No | "farcaster" | "farcaster" or "web3" |
-| targetChain | string | No | "base" | "base" or "monad" |
+| appType | string | No | "web3" | App type (use "web3" for web apps) |
 | name | string | No | - | Optional project name |
 
 **Response**:
@@ -279,7 +277,7 @@ echo "Creating app..."
 RESULT=$(curl -s -X POST "$API_URL/api/v1/apps" \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"prompt": "Create a simple counter app"}')
+  -d '{"prompt": "Create a simple counter app", "appType": "web3"}')
 
 JOB_ID=$(echo "$RESULT" | jq -r '.jobId')
 echo "Job ID: $JOB_ID"

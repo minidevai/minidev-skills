@@ -1,6 +1,6 @@
 ---
 name: minidev
-description: AI-powered miniapp creation agent via natural language. Use when the user wants to create web apps, mini apps, Farcaster frames, or web3 applications. Supports creating apps from text descriptions, checking build status, viewing deployed URLs, managing credits, and listing projects. Apps are automatically deployed to minidev.fun with custom subdomains.
+description: AI-powered web app creation agent via natural language. Use when the user wants to create web apps or web3 applications. Supports creating apps from text descriptions, checking build status, viewing deployed URLs, managing credits, and listing projects. Apps are automatically deployed to minidev.fun with custom subdomains.
 metadata:
   {
     "clawdbot":
@@ -102,17 +102,8 @@ scripts/minidev-projects.sh 10 0  # limit=10, offset=0
 ### App Creation
 
 - **Web Apps**: Create full-stack web applications from descriptions
-- **Farcaster Frames**: Build Farcaster mini apps and frames
-- **Web3 Apps**: Create blockchain-connected applications
 - **Automatic Deployment**: Apps are deployed to `{projectId}.minidev.fun`
-
-**App Types**:
-- `farcaster` - Farcaster frames and mini apps (default)
-- `web3` - Web3-enabled applications
-
-**Target Chains**:
-- `base` - Base network (default)
-- `monad` - Monad network
+- **Modern Stack**: Next.js, React, TypeScript, Tailwind CSS
 
 ### Project Management
 
@@ -147,11 +138,11 @@ The `minidev.sh` wrapper handles this automatically. For details on the API stru
 # Create a simple app
 scripts/minidev.sh "Create a todo list app with local storage"
 
-# Create a Farcaster frame
-scripts/minidev.sh "Create a Farcaster frame that shows a random quote"
+# Create with a custom name
+scripts/minidev.sh "Create a weather dashboard" "WeatherApp"
 
-# Create a web3 app
-scripts/minidev.sh "Create a token balance checker for Base network"
+# Create a dashboard
+scripts/minidev.sh "Create a crypto portfolio tracker dashboard"
 ```
 
 ### Check Build Progress
@@ -192,26 +183,28 @@ scripts/minidev-projects.sh 5 5   # Next 5 projects
 - "Make a note-taking app with markdown support"
 - "Create a timer app with start, stop, and reset buttons"
 
-### Farcaster Frames
-
-- "Create a Farcaster frame that displays a random motivational quote"
-- "Build a poll frame where users can vote on options"
-- "Make a frame that shows the current ETH price"
-- "Create an interactive game frame"
-
-### Web3 Apps
-
-- "Create a wallet balance checker for Base network"
-- "Build an NFT gallery that displays owned NFTs"
-- "Make a token swap interface using Uniswap"
-- "Create a simple DEX aggregator UI"
-
 ### Utility Apps
 
 - "Create a QR code generator"
 - "Build a color palette generator"
 - "Make a markdown preview tool"
 - "Create a JSON formatter and validator"
+- "Build a calculator app"
+
+### Dashboard Apps
+
+- "Create a weather dashboard with location search"
+- "Build a stock market tracker"
+- "Make a social media analytics dashboard"
+- "Create a project management board"
+- "Build a habit tracker with charts"
+
+### Interactive Apps
+
+- "Create a quiz app with multiple choice questions"
+- "Build a flashcard study app"
+- "Make a recipe book with search functionality"
+- "Create a budget tracker with expense categories"
 
 ## Error Handling
 

@@ -1,12 +1,10 @@
 #!/bin/bash
 # MiniDev Agent API wrapper - handles submit-poll-complete workflow
-# Usage: minidev.sh "<prompt>" [appType] [targetChain] [name]
+# Usage: minidev.sh "<prompt>" [name]
 # 
 # Arguments:
-#   prompt      - Description of the app to create (required)
-#   appType     - "farcaster" or "web3" (default: farcaster)
-#   targetChain - "base" or "monad" (default: base)
-#   name        - Optional name for the project
+#   prompt - Description of the app to create (required)
+#   name   - Optional name for the project
 
 set -euo pipefail
 

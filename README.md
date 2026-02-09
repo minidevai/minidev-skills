@@ -2,7 +2,7 @@
 
 Pre-built capabilities for AI agents to create and deploy web apps. Skills enable autonomous app creation, deployment, and management through natural language interfaces.
 
-Public repository of skills for OpenClaw — enabling AI agents to create miniapps via the MiniDev API.
+Public repository of skills for OpenClaw — enabling AI agents to create web apps via the MiniDev API.
 
 ## Quick Start
 
@@ -17,7 +17,7 @@ Skills are drop-in modules. No additional configuration required for basic usage
 
 | Provider | Skill | Description |
 |----------|-------|-------------|
-| [minidev](https://app.minidev.fun) | [minidev](minidev/) | AI-powered miniapp creation. Create web apps, Farcaster frames, and web3 applications from natural language descriptions. Apps are automatically deployed to minidev.fun. |
+| [minidev](https://app.minidev.fun) | [minidev](minidev/) | AI-powered web app creation. Create web apps and web3 applications from natural language descriptions. Apps are automatically deployed to minidev.fun. |
 
 ## Structure
 
