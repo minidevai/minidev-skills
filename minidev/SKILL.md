@@ -265,7 +265,7 @@ export MINIDEV_API_URL="https://app.minidev.fun"
 - **App**: https://app.minidev.fun
 - **API Keys**: https://app.minidev.fun/api-keys
 - **Credits**: Purchase at https://app.minidev.fun
-- **Twitter**: @miniaboratory
+- **X**: https://x.com/minidevfun
 
 ## Troubleshooting
 

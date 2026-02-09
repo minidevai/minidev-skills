@@ -310,4 +310,4 @@ done
 
 - **API Documentation**: https://app.minidev.fun/api/v1/docs
 - **API Keys**: https://app.minidev.fun/api-keys
-- **Support**: @miniaboratory on Twitter
+- **Support**: https://x.com/minidevfun

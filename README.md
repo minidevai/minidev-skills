@@ -8,7 +8,7 @@ Public repository of skills for OpenClaw — enabling AI agents to create web ap
 
 ```bash
 # Add this repo URL to OpenClaw to browse and install skills:
-https://github.com/miniaboratory/minidev-skills
+https://github.com/minidevai/minidev-skills
 ```
 
 Skills are drop-in modules. No additional configuration required for basic usage.
@@ -17,7 +17,7 @@ Skills are drop-in modules. No additional configuration required for basic usage
 
 | Provider | Skill | Description |
 |----------|-------|-------------|
-| [minidev](https://app.minidev.fun) | [minidev](minidev/) | AI-powered web app creation. Create web apps and web3 applications from natural language descriptions. Apps are automatically deployed to minidev.fun. |
+| [minidev](https://app.minidev.fun) | [minidev](minidev/) | AI-powered web app creation. Create web apps from natural language descriptions. Apps are automatically deployed to minidev.fun. |
 
 ## Structure
 
@@ -41,16 +41,12 @@ minidev-skills/
 Give OpenClaw the URL to this repo and it will let you choose which skill to install.
 
 ```
-https://github.com/miniaboratory/minidev-skills
+https://github.com/minidevai/minidev-skills
 ```
 
 ## Use Cases
 
 **Autonomous app creation** — Agents create and deploy web apps from natural language descriptions without human intervention.
-
-**Farcaster integration** — Build Farcaster frames and mini apps programmatically.
-
-**Web3 applications** — Create blockchain-connected applications on Base and Monad networks.
 
 **Rapid prototyping** — Quickly generate and deploy app ideas for testing and iteration.
 
@@ -118,13 +114,13 @@ We welcome community contributions! Here's how to add your own skill:
 
 ## About
 
-MiniDev Skills Library for AI agents. Create web apps, Farcaster frames, and web3 applications through natural language.
+MiniDev Skills Library for AI agents. Create web apps through natural language.
 
 ## Resources
 
 - **MiniDev App**: https://app.minidev.fun
 - **API Keys**: https://app.minidev.fun/api-keys
-- **Twitter**: @miniaboratory
+- **X**: https://x.com/minidevfun
 
 ## License
 
