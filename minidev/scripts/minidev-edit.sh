@@ -1,14 +1,14 @@
 #!/bin/bash
-# Submit an app creation request to MiniDev API
-# Usage: minidev-create.sh "<prompt>" [name] [apiKeysJson]
+# Edit an existing app via MiniDev API
+# Usage: minidev-edit.sh "<projectId>" "<prompt>" [apiKeysJson]
 #
 # Arguments:
-#   prompt      - Description of the app to create (required)
-#   name        - Optional name for the project
-#   apiKeysJson - Optional JSON object with API keys (e.g., '{"moralisApiKey":"...","privyAppId":"..."}')
+#   projectId   - The project ID to edit (required)
+#   prompt      - Description of the changes to make (required)
+#   apiKeysJson - Optional JSON object with API keys to override stored keys
 #
-# Returns JSON with jobId and projectId for polling
-# If status is "pending_api_keys", use minidev-submit-keys.sh to provide missing keys
+# Returns JSON with jobId for polling
+# API keys from initial creation are reused automatically
 
 set -euo pipefail
 
@@ -43,47 +43,36 @@ if [ -z "$API_KEY" ]; then
 fi
 
 # Parse arguments
-PROMPT="${1:-}"
-NAME="${2:-}"
+PROJECT_ID="${1:-}"
+PROMPT="${2:-}"
 API_KEYS_JSON="${3:-}"
 
-if [ -z "$PROMPT" ]; then
-  echo '{"error": "Usage: minidev-create.sh \"<prompt>\" [name] [apiKeysJson]"}' >&2
+if [ -z "$PROJECT_ID" ] || [ -z "$PROMPT" ]; then
+  echo '{"error": "Usage: minidev-edit.sh \"<projectId>\" \"<prompt>\" [apiKeysJson]"}' >&2
   exit 1
 fi
 
-# Build request body (appType is always "web3" for web apps)
-if [ -n "$API_KEYS_JSON" ] && [ -n "$NAME" ]; then
-  REQUEST_BODY=$(jq -nc \
-    --arg prompt "$PROMPT" \
-    --arg name "$NAME" \
-    --argjson apiKeys "$API_KEYS_JSON" \
-    '{prompt: $prompt, appType: "web3", name: $name, apiKeys: $apiKeys}')
-elif [ -n "$API_KEYS_JSON" ]; then
+# Build request body
+if [ -n "$API_KEYS_JSON" ]; then
   REQUEST_BODY=$(jq -nc \
     --arg prompt "$PROMPT" \
     --argjson apiKeys "$API_KEYS_JSON" \
-    '{prompt: $prompt, appType: "web3", apiKeys: $apiKeys}')
-elif [ -n "$NAME" ]; then
-  REQUEST_BODY=$(jq -nc \
-    --arg prompt "$PROMPT" \
-    --arg name "$NAME" \
-    '{prompt: $prompt, appType: "web3", name: $name}')
+    '{prompt: $prompt, apiKeys: $apiKeys}')
 else
   REQUEST_BODY=$(jq -nc \
     --arg prompt "$PROMPT" \
-    '{prompt: $prompt, appType: "web3"}')
+    '{prompt: $prompt}')
 fi
 
-# Submit request
-curl -sf -X POST "${API_URL}/api/v1/apps" \
+# Submit PATCH request
+curl -sf -X PATCH "${API_URL}/api/v1/apps/${PROJECT_ID}" \
   -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json" \
   -d "$REQUEST_BODY" \
   || {
     STATUS=$?
     if [ $STATUS -eq 22 ]; then
-      echo '{"error": "API request failed. Check your API key at https://app.minidev.fun/api-keys"}' >&2
+      echo '{"error": "API request failed. Check your API key or project ID."}' >&2
     else
       echo '{"error": "Network error. Please check your connection."}' >&2
     fi

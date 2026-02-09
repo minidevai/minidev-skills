@@ -71,10 +71,44 @@ scripts/minidev-credits.sh
 For creating apps from natural language descriptions:
 
 ```bash
-scripts/minidev.sh "Create a simple counter app with increment and decrement buttons"
+# Every app needs privyAppId
+scripts/minidev.sh "Create a simple counter app" "" '{"privyAppId":"YOUR_PRIVY_ID"}'
 ```
 
 The main script handles the full submit-poll-complete workflow automatically and returns the deployed URL when ready.
+
+#### Apps That Read Blockchain Data
+
+If your app needs to read wallet data (balances, NFTs, transactions), also include `moralisApiKey`:
+
+```bash
+# Portfolio tracker - needs moralisApiKey for blockchain data
+scripts/minidev.sh "Create a portfolio tracker" "" '{"privyAppId":"YOUR_PRIVY_ID","moralisApiKey":"YOUR_MORALIS_KEY"}'
+
+# NFT gallery
+scripts/minidev.sh "Create an NFT gallery" "MyNFTs" '{"privyAppId":"YOUR_PRIVY_ID","moralisApiKey":"YOUR_MORALIS_KEY"}'
+```
+
+### Edit an Existing App
+
+To update or modify an existing app with a new prompt:
+
+```bash
+# Edit an app by project ID - API keys are reused automatically
+scripts/minidev-edit.sh "PROJECT_ID" "Add a dark mode toggle to the settings page"
+
+# Override API keys if needed
+scripts/minidev-edit.sh "PROJECT_ID" "Add NFT gallery feature" '{"moralisApiKey":"NEW_KEY"}'
+```
+
+### Submit Missing API Keys
+
+If the initial request returns `pending_api_keys` status:
+
+```bash
+# Submit the missing Privy App ID
+scripts/minidev-submit-keys.sh "JOB_ID" '{"privyAppId":"YOUR_PRIVY_ID"}'
+```
 
 ### Check Status
 
@@ -114,7 +148,7 @@ scripts/minidev-projects.sh 10 0  # limit=10, offset=0
 
 ### Credit System
 
-- Each app creation costs 1 credit
+- Each app creation or edit costs 10 credits
 - Credits are linked to your wallet address
 - Purchase credits at [app.minidev.fun](https://app.minidev.fun)
 
@@ -122,27 +156,51 @@ scripts/minidev-projects.sh 10 0  # limit=10, offset=0
 
 MiniDev uses an asynchronous job-based API:
 
-1. **Submit** - Send prompt, get job ID and project ID
-2. **Poll** - Check status every 5 seconds
-3. **Complete** - Get deployed URL when done
+1. **Submit** - Send prompt (with optional API keys), get job ID and project ID
+2. **API Keys** - If status is `pending_api_keys`, submit missing keys via `/keys` endpoint
+3. **Poll** - Check status every 5 seconds
+4. **Complete** - Get deployed URL when done
+
+For editing existing apps, use `PATCH /api/v1/apps/:projectId` - API keys from initial creation are reused automatically.
 
 The `minidev.sh` wrapper handles this automatically. For details on the API structure, job states, polling strategy, and error handling, see:
 
 **Reference**: [references/api-workflow.md](references/api-workflow.md)
+
+### API Keys
+
+**Every app requires a Privy App ID** - this is used for user authentication. Additional keys are only needed for specific features:
+
+| Key | When Required | How to Get |
+|-----|---------------|------------|
+| `privyAppId` | **Every app** | [dashboard.privy.io](https://dashboard.privy.io) |
+| `moralisApiKey` | Apps that read blockchain data (portfolios, NFTs, transactions) | [moralis.io](https://moralis.io) |
+| `neynarApiKey` | Farcaster apps with notifications, casts, social features | [dev.neynar.com](https://dev.neynar.com) |
+| `neynarClientId` | With neynarApiKey for frontend Farcaster features | [dev.neynar.com](https://dev.neynar.com) |
+
+**Examples**:
+
+```bash
+# Any app - always include privyAppId
+scripts/minidev-create.sh "Create a todo list app" "" '{"privyAppId":"YOUR_PRIVY_ID"}'
+
+# App that reads wallet data - add moralisApiKey
+scripts/minidev-create.sh "Create a portfolio tracker" "" '{"privyAppId":"YOUR_PRIVY_ID","moralisApiKey":"YOUR_MORALIS_KEY"}'
+```
 
 ## Common Patterns
 
 ### Create and Deploy
 
 ```bash
-# Create a simple app
-scripts/minidev.sh "Create a todo list app with local storage"
+# Any app - always include privyAppId
+scripts/minidev.sh "Create a todo list app" "" '{"privyAppId":"YOUR_PRIVY_ID"}'
 
-# Create with a custom name
-scripts/minidev.sh "Create a weather dashboard" "WeatherApp"
+# With a custom name
+scripts/minidev.sh "Create a weather dashboard" "WeatherApp" '{"privyAppId":"YOUR_PRIVY_ID"}'
 
-# Create a dashboard
-scripts/minidev.sh "Create a crypto portfolio tracker dashboard"
+# App that reads wallet data - also include moralisApiKey
+scripts/minidev.sh "Create a portfolio tracker" "" '{"privyAppId":"YOUR_PRIVY_ID","moralisApiKey":"YOUR_MORALIS_KEY"}'
 ```
 
 ### Check Build Progress
@@ -214,6 +272,7 @@ Common issues and fixes:
 - **Invalid API key** → Regenerate at app.minidev.fun/api-keys
 - **Build failed** → Check error message, simplify prompt
 - **Timeout** → Complex apps may take longer, check status manually
+- **pending_api_keys** → App needs external API keys (Moralis, Privy, etc.) - submit them via `minidev-submit-keys.sh`
 
 ## Best Practices
 
@@ -228,7 +287,7 @@ Common issues and fixes:
 
 1. Check credits before creating apps
 2. Test with simple apps first
-3. Complex apps cost the same (1 credit)
+3. Complex apps cost the same (10 credits)
 
 ### Monitoring
 

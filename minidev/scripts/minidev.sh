@@ -1,10 +1,11 @@
 #!/bin/bash
 # MiniDev Agent API wrapper - handles submit-poll-complete workflow
-# Usage: minidev.sh "<prompt>" [name]
+# Usage: minidev.sh "<prompt>" [name] [apiKeysJson]
 # 
 # Arguments:
-#   prompt - Description of the app to create (required)
-#   name   - Optional name for the project
+#   prompt      - Description of the app to create (required)
+#   name        - Optional name for the project
+#   apiKeysJson - Optional JSON object with API keys (e.g., '{"moralisApiKey":"...","privyAppId":"..."}')
 
 set -euo pipefail
 
@@ -21,9 +22,10 @@ if ! echo "$SUBMIT_RESULT" | jq -e '.success == true' >/dev/null 2>&1; then
   exit 1
 fi
 
-# Extract job ID
+# Extract job ID and status
 JOB_ID=$(echo "$SUBMIT_RESULT" | jq -r '.jobId')
 PROJECT_ID=$(echo "$SUBMIT_RESULT" | jq -r '.projectId // "pending"')
+INITIAL_STATUS=$(echo "$SUBMIT_RESULT" | jq -r '.status')
 
 if [ -z "$JOB_ID" ] || [ "$JOB_ID" = "null" ]; then
   echo "Failed to get job ID" >&2
@@ -32,6 +34,22 @@ fi
 
 echo "Job submitted: $JOB_ID" >&2
 echo "Project ID: $PROJECT_ID" >&2
+
+# Check if API keys are required
+if [ "$INITIAL_STATUS" = "pending_api_keys" ]; then
+  echo "" >&2
+  echo "⚠️  API keys required before generation can start!" >&2
+  echo "" >&2
+  echo "Required keys:" >&2
+  echo "$SUBMIT_RESULT" | jq -r '.requiredApiKeys[] | "  - \(.type): \(.reason)"' >&2
+  echo "" >&2
+  echo "To submit missing keys, run:" >&2
+  echo "  minidev-submit-keys.sh \"$JOB_ID\" '{\"moralisApiKey\":\"YOUR_KEY\"}'" >&2
+  echo "" >&2
+  echo "$SUBMIT_RESULT"
+  exit 2
+fi
+
 echo "Polling for results..." >&2
 
 # Poll for completion (max 10 minutes for app builds)
@@ -60,6 +78,17 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
       echo "✗ Build failed: $ERROR" >&2
       echo "$STATUS_RESULT"
       exit 1
+      ;;
+    "pending_api_keys")
+      echo "" >&2
+      echo "⚠️  API keys required!" >&2
+      echo "Required keys:" >&2
+      echo "$STATUS_RESULT" | jq -r '.requiredApiKeys[] | "  - \(.type): \(.reason)"' 2>/dev/null >&2 || echo "  (check response for details)" >&2
+      echo "" >&2
+      echo "To submit missing keys, run:" >&2
+      echo "  minidev-submit-keys.sh \"$JOB_ID\" '{\"moralisApiKey\":\"YOUR_KEY\"}'" >&2
+      echo "$STATUS_RESULT"
+      exit 2
       ;;
     "pending"|"processing")
       # Show progress updates
