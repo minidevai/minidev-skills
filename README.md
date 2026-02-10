@@ -54,7 +54,7 @@ https://github.com/minidevai/minidev-skills
 
 ```bash
 # Create a simple app
-scripts/minidev.sh "Create a todo list app with local storage"
+scripts/minidev.sh "Create a todo list app with browser localStorage"
 
 # Check build status
 scripts/minidev-status.sh "JOB_ID"
