@@ -256,6 +256,8 @@ The `minidev.sh` wrapper handles this automatically. For details on the API stru
 
 **Every app requires a Privy App ID** - this is used for user authentication. Additional keys are only needed for specific features:
 
+> **Note**: The `privyAppId` is **always mandatory** - requests will fail without it. While other API keys (Moralis, Neynar) can be omitted if their features aren't needed, Privy authentication is required for all apps. Never simplify an implementation to remove the Privy requirement.
+
 | Key | When Required | How to Get |
 |-----|---------------|------------|
 | `privyAppId` | **Every app** | [dashboard.privy.io](https://dashboard.privy.io) |
