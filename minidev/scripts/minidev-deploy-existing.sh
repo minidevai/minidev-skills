@@ -18,6 +18,7 @@
 #   twitter        - Twitter/X URL
 #   telegram       - Telegram URL
 #   farcaster      - Farcaster URL
+#   appUrl         - URL of your existing app (shown as preview on the token page)
 #   duneQueryId    - Dune Analytics revenue query ID for tracking app revenue
 #   vault          - Object with { percentage, lockupDays, vestingDays }
 #                    percentage: creator vault percentage (1-100)
