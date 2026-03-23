@@ -491,8 +491,104 @@ while true; do
 done
 ```
 
+## Launch Flow API (Token-First)
+
+The launch flow deploys a token on-chain and saves an idea project in a single API call. The app auto-builds when the token reaches trading volume.
+
+### Launch a Launchpad
+
+**Endpoint**: `POST {INTERNAL_API_URL}/api/internal/idea`
+
+**Authentication**: `x-internal-api-key` header
+
+**Request Body**:
+```json
+{
+  "tokenName": "AgentPad",
+  "tokenSymbol": "APAD",
+  "description": "A launchpad for launching AI agent tokens on Base",
+  "appPrompt": "Create a token launchpad focused on AI agents...",
+  "template": "Launchpad",
+  "audience": "Agents & Humans",
+  "creatorWallet": "0x1234567890123456789012345678901234567890",
+  "creatorEmail": "user@example.com",
+  "privyAppId": "clxyz123",
+  "imageUrl": "https://res.cloudinary.com/.../logo.png"
+}
+```
+
+**Required Fields**:
+| Field | Type | Description |
+|-------|------|-------------|
+| tokenName | string | Token name (max 50 chars) |
+| tokenSymbol | string | Token symbol (max 10 chars) |
+| description | string | One-sentence elevator pitch |
+| appPrompt | string | Detailed prompt for AI to build the app |
+| template | string | `"Launchpad"` (only supported value) |
+| audience | string | `"Agents & Humans"`, `"Humans"`, or `"Agents"` |
+| creatorWallet | string | Ethereum address (0x...) |
+
+**Optional Fields**:
+| Field | Type | Description |
+|-------|------|-------------|
+| creatorEmail | string | Email for deployment notifications |
+| privyAppId | string | Privy App ID (required for Launchpad) |
+| rewardRecipientWallet | string | Wallet for launchpad admin rewards |
+| imageUrl | string | Token logo URL |
+| website | string | Project website URL |
+| twitter | string | Twitter/X URL |
+| telegram | string | Telegram URL |
+| farcaster | string | Farcaster URL |
+
+**Response (Success)**:
+```json
+{
+  "success": true,
+  "projectId": "uuid",
+  "tokenAddress": "0x...",
+  "txHash": "0x...",
+  "message": "Idea stored successfully"
+}
+```
+
+**Error Responses**:
+- `400` — Missing required fields
+- `401` — Invalid or missing internal API key
+- `502` — Token deployment failed (upstream API error)
+- `500` — Internal server error
+
+**How It Works**:
+1. Backend always deploys a new token via tokens.fun (platform gas wallet, no user signing)
+2. User is found/created by wallet address or email
+3. Idea project is saved with `isIdea: true` and the deployed token address
+4. Volume monitor polls the token and auto-builds the app when threshold is hit
+
+### Upload Image
+
+**Endpoint**: `POST {CRYSTALS_URL}/api/upload-image`
+
+**Authentication**: None required
+
+**Content-Type**: `multipart/form-data`
+
+**Request**: Form data with `file` field containing the image
+
+**Response**:
+```json
+{
+  "success": true,
+  "url": "https://res.cloudinary.com/...",
+  "publicId": "..."
+}
+```
+
+**Constraints**:
+- Max size: 10MB
+- Supported formats: JPEG, PNG, GIF, WebP, SVG
+
 ## Resources
 
 - **API Documentation**: https://app.minidev.fun/api/v1/docs
 - **API Keys**: https://app.minidev.fun/api-keys
+- **Token Launchpad**: https://tokens.fun
 - **Support**: https://x.com/minidevfun
