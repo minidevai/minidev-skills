@@ -218,7 +218,7 @@ When the user says they already have an app, or want to deploy a token for an ex
 | `symbol` | Ask for the ticker symbol. 3-5 uppercase letters. |
 | `description` | One-sentence description of their project/app. |
 | `website` | Ask for their project's marketing/homepage URL. |
-| `appUrl` | Ask for the URL of their live app. This is shown as an interactive preview on the token page. |
+| `appUrl` | **Required.** Ask for the URL of their live app. This is shown as an interactive preview on the token page. Do NOT proceed without this — the whole point of this flow is that they already have an app. |
 
 **2. Ask about revenue tracking (Dune Analytics):**
 
@@ -312,11 +312,11 @@ Agent: "Your token SwapFlow ($SWAP) is live!
 - `name` — Token name (max 50 chars)
 - `symbol` — Token symbol (max 10 chars)
 - `creatorWallet` — Ethereum address (0x...)
+- `appUrl` — Live app URL (shown as interactive preview on the token page)
 
 **Optional JSON fields**:
 - `description` — Project description
 - `website` — Project homepage/marketing URL
-- `appUrl` — Live app URL (shown as interactive preview on the token page)
 - `imageUrl` — Token logo URL (upload first with `minidev-upload-image.sh`)
 - `duneQueryId` — Dune Analytics revenue query ID (single query that returns app revenue)
 - `vault` — Object with `{ percentage, lockupDays, vestingDays }` for creator vault

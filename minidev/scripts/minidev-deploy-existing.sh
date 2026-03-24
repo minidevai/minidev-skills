@@ -10,6 +10,7 @@
 #   name           - Token name, max 50 chars
 #   symbol         - Token symbol, max 10 chars
 #   creatorWallet  - Ethereum address for creator rewards (0x...)
+#   appUrl         - URL of the existing app (shown as preview on the token page)
 #
 # Optional fields in JSON:
 #   description    - Token description
@@ -18,7 +19,6 @@
 #   twitter        - Twitter/X URL
 #   telegram       - Telegram URL
 #   farcaster      - Farcaster URL
-#   appUrl         - URL of your existing app (shown as preview on the token page)
 #   duneQueryId    - Dune Analytics revenue query ID for tracking app revenue
 #   vault          - Object with { percentage, lockupDays, vestingDays }
 #                    percentage: creator vault percentage (1-100)
@@ -80,6 +80,7 @@ fi
 NAME=$(echo "$DEPLOY_JSON" | jq -r '.name // empty')
 SYMBOL=$(echo "$DEPLOY_JSON" | jq -r '.symbol // empty')
 CREATOR_WALLET=$(echo "$DEPLOY_JSON" | jq -r '.creatorWallet // empty')
+APP_URL=$(echo "$DEPLOY_JSON" | jq -r '.appUrl // empty')
 
 if [ -z "$NAME" ]; then
   echo '{"error": "name is required"}' >&2
@@ -93,6 +94,11 @@ fi
 
 if [ -z "$CREATOR_WALLET" ]; then
   echo '{"error": "creatorWallet is required (Ethereum address starting with 0x)"}' >&2
+  exit 1
+fi
+
+if [ -z "$APP_URL" ]; then
+  echo '{"error": "appUrl is required — provide the URL of your existing app"}' >&2
   exit 1
 fi
 
