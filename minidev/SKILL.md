@@ -85,7 +85,9 @@ The backend handles everything in one call: deploys the token on-chain via token
 
 **6. Report success:**
 
-Share the token page URL, BaseScan URL, and explain that the app will auto-build when the token reaches the $1 trading volume threshold.
+Share the token page URL and BaseScan URL. Explain that the app will auto-build when the token reaches the $10,000 trading volume threshold.
+
+**IMPORTANT: Do NOT describe what the app will look like, list its features, or predict its design.** You don't know — the AI builder decides that later based on the `appPrompt`. Only share the token details and the auto-build trigger info. Never make up feature lists, color schemes, or UI descriptions.
 
 ### Example Conversation
 
@@ -142,10 +144,9 @@ Agent: "Your token AgentPad ($APAD) is live!
   Token page:  https://tokens.fun/coin/0x1234...5678
   BaseScan:    https://basescan.org/address/0x1234...5678
 
-  Your launchpad will automatically start building once your token
-  reaches the $1 trading volume threshold. The system checks every
-  60 seconds — once it triggers, your AI agent token launchpad will
-  be built and deployed automatically."
+  Your launchpad app will automatically start building once $APAD
+  reaches $10,000 in 24h trading volume. Once it triggers, the app
+  will be built and deployed automatically to a minidev.fun URL."
 ```
 
 ### Launch Script Details
@@ -183,7 +184,7 @@ Agent: "Your token AgentPad ($APAD) is live!
 ### What Happens After Launch
 
 1. The volume monitor polls DexScreener every 60 seconds
-2. When the token hits $1 in 24h trading volume, the threshold triggers
+2. When the token hits $10,000 in 24h trading volume, the threshold triggers
 3. The system checks if Privy + infrastructure are ready
 4. If ready, the launchpad app is auto-built using the stored `appPrompt`
 5. If not ready, a setup email is sent to `creatorEmail`
