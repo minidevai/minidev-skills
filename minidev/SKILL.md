@@ -362,19 +362,15 @@ cat > ~/.clawdbot/skills/minidev/config.json << 'EOF'
   "apiKey": "mk_YOUR_KEY_HERE",
   "apiUrl": "https://app.minidev.fun",
   "tokensFunUrl": "https://tokens.fun",
-  "internalApiUrl": "https://api.minidev.fun",
-  "internalApiKey": "YOUR_INTERNAL_API_KEY",
   "creatorWallet": "0xYOUR_WALLET",
   "creatorEmail": "you@example.com"
 }
 EOF
 ```
 
-- `apiKey` — MiniDev API key for app creation, editing, and token deployment (get at https://app.minidev.fun/api-keys)
+- `apiKey` — MiniDev API key for all operations: app creation, token deployment, and launchpad launches (get at https://app.minidev.fun/api-keys)
 - `apiUrl` — MiniDev API base URL (default: https://app.minidev.fun)
 - `tokensFunUrl` — tokens.fun URL for image uploads (default: https://tokens.fun)
-- `internalApiUrl` — MiniDev backend URL (for "Launch a Launchpad" flow)
-- `internalApiKey` — Internal API key (for "Launch a Launchpad" flow)
 - `creatorWallet` — Your Ethereum wallet address
 - `creatorEmail` — Your email for notifications
 

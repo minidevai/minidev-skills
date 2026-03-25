@@ -39,33 +39,29 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Find config file
-INTERNAL_API_URL=""
-INTERNAL_API_KEY=""
-
 if [ -f "$SKILL_DIR/config.json" ]; then
   CONFIG_FILE="$SKILL_DIR/config.json"
 elif [ -f "$HOME/.clawdbot/skills/minidev/config.json" ]; then
   CONFIG_FILE="$HOME/.clawdbot/skills/minidev/config.json"
 else
-  CONFIG_FILE=""
+  # Check environment variables
+  if [ -n "${MINIDEV_API_KEY:-}" ]; then
+    API_KEY="$MINIDEV_API_KEY"
+    API_URL="${MINIDEV_API_URL:-https://app.minidev.fun}"
+  else
+    echo '{"error": "config.json not found. Create it with your API key from https://app.minidev.fun/api-keys"}' >&2
+    exit 1
+  fi
 fi
 
-if [ -n "$CONFIG_FILE" ]; then
-  INTERNAL_API_URL=$(jq -r '.internalApiUrl // empty' "$CONFIG_FILE")
-  INTERNAL_API_KEY=$(jq -r '.internalApiKey // empty' "$CONFIG_FILE")
+# Extract config if using file
+if [ -z "${API_KEY:-}" ]; then
+  API_KEY=$(jq -r '.apiKey // empty' "$CONFIG_FILE")
+  API_URL=$(jq -r '.apiUrl // "https://app.minidev.fun"' "$CONFIG_FILE")
 fi
 
-# Fall back to environment variables
-INTERNAL_API_URL="${INTERNAL_API_URL:-${MINIDEV_INTERNAL_API_URL:-}}"
-INTERNAL_API_KEY="${INTERNAL_API_KEY:-${MINIDEV_INTERNAL_API_KEY:-}}"
-
-if [ -z "$INTERNAL_API_URL" ]; then
-  echo '{"error": "internalApiUrl not configured. Add it to config.json or set MINIDEV_INTERNAL_API_URL"}' >&2
-  exit 1
-fi
-
-if [ -z "$INTERNAL_API_KEY" ]; then
-  echo '{"error": "internalApiKey not configured. Add it to config.json or set MINIDEV_INTERNAL_API_KEY"}' >&2
+if [ -z "$API_KEY" ]; then
+  echo '{"error": "apiKey not set in config.json"}' >&2
   exit 1
 fi
 
@@ -122,14 +118,14 @@ if ! echo "$CREATOR_WALLET" | grep -qE '^0x[a-fA-F0-9]{40}$'; then
 fi
 
 # Submit to backend (deploys token + saves idea in one call)
-curl -sf -X POST "${INTERNAL_API_URL}/api/internal/idea" \
-  -H "x-internal-api-key: ${INTERNAL_API_KEY}" \
+curl -sf -X POST "${API_URL}/api/v1/launch" \
+  -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json" \
   -d "$LAUNCH_JSON" \
   || {
     STATUS=$?
     if [ $STATUS -eq 22 ]; then
-      echo '{"error": "API request failed. Check your internal API key and URL."}' >&2
+      echo '{"error": "API request failed. Check your API key at https://app.minidev.fun/api-keys"}' >&2
     else
       echo '{"error": "Network error. Please check your connection."}' >&2
     fi
