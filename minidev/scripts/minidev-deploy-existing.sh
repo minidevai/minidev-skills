@@ -20,10 +20,12 @@
 #   telegram       - Telegram URL
 #   farcaster      - Farcaster URL
 #   duneQueryId    - Dune Analytics revenue query ID for tracking app revenue
-#   vault          - Object with { percentage, lockupDays, vestingDays }
-#                    percentage: creator vault percentage (1-100)
-#                    lockupDays: vault lockup period in days (min 7)
-#                    vestingDays: optional vesting period in days
+#   vault          - Object with { percentage, lockupDays, vestingDays, recipient?, recipients? }
+#                    percentage: % of total supply to vest (1-100)
+#                    lockupDays: cliff period in days (min 7)
+#                    vestingDays: optional linear vesting period in days after cliff
+#                    recipient: single recipient wallet (optional, defaults to creatorWallet)
+#                    recipients: array of { address, percentage } for multiple recipients (must sum to 100%)
 #
 # Example:
 #   minidev-deploy-existing.sh '{"name":"MyApp Token","symbol":"MAPP","creatorWallet":"0x...","website":"https://myapp.com","duneQueryId":"12345"}'

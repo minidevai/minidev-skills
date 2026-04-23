@@ -23,10 +23,12 @@
 #   twitter               - Twitter/X URL
 #   telegram              - Telegram URL
 #   farcaster             - Farcaster URL
-#   vault                 - Object with { percentage, lockupDays, vestingDays }
-#                           percentage: creator vault percentage (1-100)
-#                           lockupDays: vault lockup period in days (min 7)
-#                           vestingDays: optional vesting period in days
+#   vault                 - Object with { percentage, lockupDays, vestingDays, recipient?, recipients? }
+#                           percentage: % of total supply to vest (1-100)
+#                           lockupDays: cliff period in days (min 7)
+#                           vestingDays: optional linear vesting period in days after cliff
+#                           recipient: single recipient wallet (optional, defaults to creatorWallet)
+#                           recipients: array of { address, percentage } for multiple recipients (must sum to 100%)
 #
 # Example:
 #   minidev-launch.sh '{"tokenName":"AgentPad","tokenSymbol":"APAD","description":"A launchpad for AI agent tokens","appPrompt":"Create a token launchpad...","template":"Launchpad","audience":"Agents & Humans","creatorWallet":"0x...","privyAppId":"clxyz123"}'

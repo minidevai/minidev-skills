@@ -42,9 +42,14 @@ if [ -z "$API_KEY" ]; then
   exit 1
 fi
 
-# Parse pagination arguments
+# Parse and validate pagination arguments
 LIMIT="${1:-10}"
 OFFSET="${2:-0}"
+
+if ! [[ "$LIMIT" =~ ^[0-9]+$ ]] || ! [[ "$OFFSET" =~ ^[0-9]+$ ]]; then
+  echo '{"error": "limit and offset must be integers"}' >&2
+  exit 1
+fi
 
 # Get projects
 curl -sf -X GET "${API_URL}/api/v1/apps/projects?limit=${LIMIT}&offset=${OFFSET}" \

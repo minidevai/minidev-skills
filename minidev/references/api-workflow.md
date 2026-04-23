@@ -513,7 +513,7 @@ The launch flow deploys a token on-chain and saves an idea project in a single A
   "creatorWallet": "0x1234567890123456789012345678901234567890",
   "creatorEmail": "user@example.com",
   "privyAppId": "clxyz123",
-  "imageUrl": "https://res.cloudinary.com/.../logo.png"
+  "imageUrl": "https://gateway.pinata.cloud/ipfs/Qm.../logo"
 }
 ```
 
@@ -567,24 +567,29 @@ The launch flow deploys a token on-chain and saves an idea project in a single A
 
 **Endpoint**: `POST {CRYSTALS_URL}/api/upload-image`
 
-**Authentication**: None required
+**Authentication**: Required (API key Bearer token)
 
 **Content-Type**: `multipart/form-data`
 
-**Request**: Form data with `file` field containing the image
+**Request**: Form data with:
+- `file` — Image file (required)
+- `name` — Token name (optional, included in IPFS metadata)
+- `symbol` — Token symbol (optional, included in IPFS metadata)
 
 **Response**:
 ```json
 {
   "success": true,
-  "url": "https://res.cloudinary.com/...",
-  "publicId": "..."
+  "url": "https://gateway.pinata.cloud/ipfs/Qm...",
+  "tokenURI": "ipfs://Qm...",
+  "imageCID": "Qm...",
+  "metadataCID": "Qm..."
 }
 ```
 
 **Constraints**:
-- Max size: 10MB
-- Supported formats: JPEG, PNG, GIF, WebP, SVG
+- Max size: 5MB
+- Supported formats: JPEG, PNG, GIF, WebP
 
 ## Resources
 
